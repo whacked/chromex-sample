@@ -1,14 +1,19 @@
 (defproject binaryage/chromex-sample "0.1.0-SNAPSHOT"
   :dependencies [[org.clojure/clojure "1.9.0-alpha17"]
-                 [org.clojure/clojurescript "1.9.660"]
+                 [org.clojure/clojurescript "1.9.854"]
                  [org.clojure/core.async "0.3.443"]
                  [binaryage/chromex "0.5.9"]
                  [binaryage/devtools "0.9.4"]
                  [figwheel "0.5.10"]
-                 [environ "1.1.0"]]
+                 [environ "1.1.0"]
+                 [reagent "0.6.0"]
+                 [clj-time "0.14.0"]
+                 [hiccup "1.0.5"]
+                 [swiss-arrows "1.0.0" :exclusions [org.clojure]]
+                 [cljs-css-modules "0.2.1"]]
 
   :plugins [[lein-cljsbuild "1.1.6"]
-            [lein-figwheel "0.5.10"]
+            [lein-figwheel "0.5.13"]
             [lein-shell "0.5.0"]
             [lein-environ "1.1.0"]
             [lein-cooper "1.2.2"]]
@@ -44,6 +49,10 @@
                                            :preloads      [devtools.preload]
                                            :main          chromex-sample.popup
                                            :optimizations :none
+
+                                           :npm-deps {:golden-layout "1.5.9"}
+                                           :install-deps  true
+
                                            :source-map    true}}}}}
              :unpacked-content-script
              {:cljsbuild {:builds

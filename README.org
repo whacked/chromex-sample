@@ -1,0 +1,103 @@
+* simple chrome extension experimentation
+
+  goals are to use reagent for UI manipulation.
+
+  contains a working minimal port of the [[https://developer.chrome.com/extensions/getstarted][color changer tutorial]] using reagent.
+
+  then, it creates a fixed overlay with a show/hide toggle
+
+* notes
+
+  see https://github.com/binaryage/chromex-sample for installation
+
+  install the unpacked extension by loading =chromex-sample/resources/unpacked=
+
+  if this doesn't work right away, check =manifest.json= for syntax errors (obvious); if it still doesn't work, make sure =main.js= is compiling correctly (less obvious). Sometimes a =lein clean= then =lein content= may fix it
+
+** cljs repl (via =inf-clojure=)
+
+   live repl goes to the console of background.html
+
+** the figwheel reloader
+
+   runs on popup.html;
+
+   you can see it get refreshed if you keep the popup open and update popup.cljs
+
+** content_script.js
+
+   console output is in the main browser's tools (on any page where the extension runs)
+
+   in order to pick up changes, you must reload the extension from the =Extensions= page (chrome://extensions)
+
+   the reload seems to have a delay. sometimes changes take 2+ reloads to pick up
+
+** popup.js
+
+   the console output is viewable by right clicking the extension, then inspect
+
+   after rebuilding popup.js you DO NOT need to reload the extension as long as it isn't jammed
+
+* issues and resolutions
+
+** cannot use nrepl to connect from emacs
+
+   must use =inf-clojure=
+
+   launch repl via e.g. =(inf-clojure "~/opt/lein fig")=
+
+   use =inf-clojure-minor-mode= and not =inf-clojure-mode=; the latter will not correctly load the repl buffer; only the minor-mode is meant for source files
+
+** cannot hook into cljs repl
+
+   had to restart chrome to reset this
+
+** js modifications don't seem to be reloading
+
+   i.e. modifying =popup.js= and re-clicking the extention button.
+   usually any modifications are picked up immediately.
+
+   but sometimes they stop updating.
+
+   worst case, restart chrome fixes it
+
+*** using process Task Manager (Shift-Esc)
+
+    kill the extension, the reload. this works without restarting
+
+    you may not need to kill it, just use reload in the Extensions
+    view.
+
+* what API elements are available where
+
+** popup
+
+   - chrome
+     
+** background
+
+   - chrome
+   
+** straight dom manipulation
+
+   can be done only through content_script.js
+
+* how to do...
+
+** inject css
+
+   tabs.insertCSS
+
+** execute a javascript
+
+   from =popup='s process or console,
+
+   #+BEGIN_SRC javascript :eval never
+   chrome.tabs.executeScript({code:"console.warn('hello');"})
+   #+END_SRC
+
+   will execute against the associated browser tab's process
+
+** get html of active tab
+
+   
